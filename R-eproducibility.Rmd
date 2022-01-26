@@ -1,3 +1,8 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
 ### Project Info
 ---
 title: "R-eproducibility"
@@ -21,13 +26,14 @@ getwd()
 
 # Load data from folder and check integrity
 ```{r}
+data = FallopiaData
 head(data) 
 str(data)
 ```
 
 ## Reorganize Data
 # Remove rows with Biomass > 60
-```{r}
+```{r echo = FALSE}
 data = data %>%
   filter(Total < 60)
 ```
