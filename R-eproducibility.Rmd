@@ -1,0 +1,79 @@
+### Project Info
+---
+title: "R-eproducibility"
+author: "mstewart2000"
+date: "26/01/2022"
+output: html_document
+GitHub Link: https://github.com/mstewart2000/R-eproducibility/tree/main
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Initial Setup
+# Loading packages and setting up working directory
+```{r echo = FALSE}
+library(dplyr)
+library(readr)
+getwd()
+```
+
+# Load data from folder and check integrity
+```{r}
+head(data) 
+str(data)
+```
+
+## Reorganize Data
+# Remove rows with Biomass > 60
+```{r}
+data = data %>%
+  filter(Total < 60)
+```
+
+# Rearrange Collums and only keep Total, Taxon, Scenario, and Nutrients
+```{r}
+data = data %>%
+  select(Total, Taxon, Scenario, Nutrients) %>%
+  arrange(Total, Taxon, Scenario, Nutrients)
+```
+
+# Create a new collum which is Total Biomass in Grams
+```{r}
+data = data %>%
+  mutate(TotalG = Total/1000) %>%
+  select(TotalG, Taxon, Scenario, Nutrients)
+```
+
+## Custom Function
+# This function will allow you to find the average, sum, or number of observations for a selected column
+# Please follow the following input method -> (data.frame$column.name, "argument")
+# Possible arguments are: Average, Sum, Observations
+```{r}
+DataInformation <- function(x, y) {
+  t <- if (y == "Average") {
+    print(paste("The average of the selected column is:", mean(x)))
+  } else if (y == "Sum") {
+    print(paste("The sum of the selected column is:", sum(x)))
+  } else if (y == "Observations") {
+    print(paste("The length of the selected column is:", length(x)))
+  } else {
+    print(paste("Error: please ensure that the selected column exists and that you have chosen either Average, Sum, or Observations"))
+  }
+}
+```
+
+# Testing the Function
+```{r}
+DataInformation(data$Taxon, "Observations")
+
+DataInformation(subset(data$TotalG, data$Nutrients == "high"), "Average"); DataInformation(subset(data$TotalG, data$Nutrients == "low"), "Average") 
+```
+
+
+## Knitting the Data to the Ouput File
+```{r}
+write.csv(data, "Output/WrangledData.csv")
+```
+
