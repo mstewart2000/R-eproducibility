@@ -17,35 +17,34 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Initial Setup
-# Loading packages and setting up working directory
+Loading packages and setting up working directory
 ```{r echo = FALSE}
 library(dplyr)
-library(readr)
 getwd()
 ```
 
-# Load data from folder and check integrity
-```{r}
-data = FallopiaData
+Load data from folder and check integrity
+```{r echo = FALSE}
+data = read.csv("FallopiaData.csv")
 head(data) 
 str(data)
 ```
 
 ## Reorganize Data
-# Remove rows with Biomass > 60
+Remove rows with Biomass > 60
 ```{r echo = FALSE}
 data = data %>%
   filter(Total < 60)
 ```
 
-# Rearrange Collums and only keep Total, Taxon, Scenario, and Nutrients
+Rearrange Collums and only keep Total, Taxon, Scenario, and Nutrients
 ```{r}
 data = data %>%
   select(Total, Taxon, Scenario, Nutrients) %>%
   arrange(Total, Taxon, Scenario, Nutrients)
 ```
 
-# Create a new collum which is Total Biomass in Grams
+Create a new collum which is Total Biomass in Grams
 ```{r}
 data = data %>%
   mutate(TotalG = Total/1000) %>%
@@ -53,9 +52,11 @@ data = data %>%
 ```
 
 ## Custom Function
-# This function will allow you to find the average, sum, or number of observations for a selected column
-# Please follow the following input method -> (data.frame$column.name, "argument")
-# Possible arguments are: Average, Sum, Observations
+This function will allow you to find the average, sum, or number of observations for a selected column
+
+Please follow the following input method -> (data.frame$column.name, "argument")
+
+Possible arguments are: Average, Sum, Observations
 ```{r}
 DataInformation <- function(x, y) {
   t <- if (y == "Average") {
@@ -70,7 +71,7 @@ DataInformation <- function(x, y) {
 }
 ```
 
-# Testing the Function
+Testing the Function
 ```{r}
 DataInformation(data$Taxon, "Observations")
 
