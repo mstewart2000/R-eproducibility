@@ -1,0 +1,53 @@
+---
+title: "R-egex"
+author: "mstewart2000"
+date: "02/02/2022"
+output: html_document
+GitHub Link: https://github.com/mstewart2000/R-eproducibility/tree/main
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Initial setup
+Load packages
+```{r echo = FALSE}
+library(dplyr)
+```
+
+Check working directory
+```{r}
+getwd()
+```
+
+
+Load data and check
+```{r}
+MData = read.csv("Measurements.csv")
+head(MData)
+str(MData)
+```
+
+## Part 1
+
+Creating new column called Sp and changing the format of the species names
+```{r}
+MData = MData %>%
+  mutate(Sp = Organism)
+MData$Sp = gsub("Lasius", "L.",MData$Sp)
+MData$Sp = gsub("Camponotus", "C.",MData$Sp)
+```
+
+Create new data set and replace Organism with Sp
+```{r}
+MData2 = MData %>%
+  select(Limb.width, Limb.length, Observer, Sp) %>%
+  relocate(Sp)
+```
+
+Make a csv file with the new data frame
+```{r}
+write.csv(MData2, "MeaShort.csv")
+```
+
